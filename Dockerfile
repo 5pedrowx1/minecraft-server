@@ -1,7 +1,7 @@
 FROM eclipse-temurin:21-jdk-jammy
 
 # Instala jq para processar JSON
-RUN apt-get update && apt-get install -y jq && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y jq netcat && rm -rf /var/lib/apt/lists/*
 
 # Cria diretório de trabalho
 WORKDIR /app
