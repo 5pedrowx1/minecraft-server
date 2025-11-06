@@ -4,18 +4,6 @@ set -e
 # Aceita o EULA
 echo "eula=true" > eula.txt
 
-# Cria/atualiza ops.json
-cat > ops.json << 'EOF'
-[
-  {
-    "uuid": "66d266a1764e30bfb2facfe1f67021dd", 
-    "name": "Pedro",
-    "level": 4,
-    "bypassesPlayerLimit": false
-  }
-]
-EOF
-
 # Baixa a versão mais recente do instalador Fabric
 FABRIC_INSTALLER_URL="https://meta.fabricmc.net/v2/versions/installer"
 LATEST_INSTALLER=$(curl -s $FABRIC_INSTALLER_URL | jq -r '.[0].version')
@@ -40,8 +28,8 @@ if [ ! -f "fabric-server-launch.jar" ]; then
     exit 1
 fi
 
+# Inicia o servidor em background
 echo "Starting Minecraft server..."
-
 java -Xmx1G -Xms1G \
   -XX:+UseG1GC \
   -XX:+ParallelRefProcEnabled \
@@ -57,4 +45,16 @@ java -Xmx1G -Xms1G \
   -XX:InitiatingHeapOccupancyPercent=15 \
   -XX:G1MixedGCLiveThresholdPercent=90 \
   -XX:SurvivorRatio=32 \
-  -jar fabric-server-launch.jar nogui
+  -jar fabric-server-launch.jar nogui &
+
+SERVER_PID=$!
+
+# Aguarda o servidor iniciar
+sleep 50
+
+# Adiciona OP via RCON
+echo "Adding Pedro as operator..."
+echo "op Pedro" | nc localhost 25575
+
+# Mantém o processo principal vivo
+wait $SERVER_PID
