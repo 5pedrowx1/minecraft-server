@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: minecraft-server
+    env: docker
+    plan: free
+    autoDeploy: true
+    ports:
+      - 25565
+    disk:
+      name: world
+      mountPath: /app/world
+      sizeGB: 2
