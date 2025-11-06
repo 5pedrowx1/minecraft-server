@@ -4,6 +4,18 @@ set -e
 # Aceita o EULA
 echo "eula=true" > eula.txt
 
+# Cria/atualiza ops.json
+cat > ops.json << 'EOF'
+[
+  {
+    "uuid": "66d266a1764e30bfb2facfe1f67021dd", 
+    "name": "Pedro",
+    "level": 4,
+    "bypassesPlayerLimit": false
+  }
+]
+EOF
+
 # Baixa a versão mais recente do instalador Fabric
 FABRIC_INSTALLER_URL="https://meta.fabricmc.net/v2/versions/installer"
 LATEST_INSTALLER=$(curl -s $FABRIC_INSTALLER_URL | jq -r '.[0].version')
